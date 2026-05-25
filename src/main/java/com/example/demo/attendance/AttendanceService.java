@@ -51,7 +51,7 @@ public class AttendanceService {
         AttendanceLog log = new AttendanceLog();
         log.setWorker(worker);
         log.setSite(site);
-        log.setClockInTime(LocalDateTime.now().minusMonths(1).minusHours(19));
+        log.setClockInTime(LocalDateTime.now());
 
         AttendanceLog savedLog = attendanceRepository.save(log);
 
@@ -67,7 +67,7 @@ public class AttendanceService {
         AttendanceLog log = attendanceRepository.findByWorkerIdAndClockOutTimeIsNull(workerId)
                 .orElseThrow(() -> new NotClockedInException("Worker is not currently clocked in"));
 
-        LocalDateTime now = LocalDateTime.now().minusMonths(1);
+        LocalDateTime now = LocalDateTime.now();
         log.setClockOutTime(now);
 
         // Calculate total hours
