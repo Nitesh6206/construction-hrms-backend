@@ -51,7 +51,7 @@ public class AttendanceService {
         AttendanceLog log = new AttendanceLog();
         log.setWorker(worker);
         log.setSite(site);
-        log.setClockInTime(LocalDateTime.now());
+        log.setClockInTime(LocalDateTime.now().minusHours(16));
 
         AttendanceLog savedLog = attendanceRepository.save(log);
 

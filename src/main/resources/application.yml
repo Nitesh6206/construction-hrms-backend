@@ -1,6 +1,8 @@
 spring:
   application:
     name: construction-hrms
+  config:
+    import: optional:file:.env[.properties]
 
   datasource:
     url: ${SUPABASE_URL}
