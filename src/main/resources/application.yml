@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    # === USE THIS FORMAT ===
+    url: jdbc:postgresql://db.alircldiischcdvsksms.supabase.co:5432/postgres
+    username: postgres
+    password: 2u+ZD_6TviB7ruD
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 1000
