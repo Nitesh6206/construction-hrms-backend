@@ -1,79 +1,197 @@
-# Construction HRMS - Java Backend
+# 🏗️ Construction HRMS - Java Backend
 
-A robust backend system for managing blue-collar workforce in the construction industry. Features daily attendance tracking, real-time active workers, automatic overtime calculation, and monthly settlement.
-
-## Features Implemented
-
-- Worker & Site Management
-- Clock-In / Clock-Out with business rules
-- Real-time Active Workers (Redis)
-- Automatic Overtime Calculation (1.5x for first 2 hrs, 2x after)
-- Monthly Overtime Cap (60 hours)
-- Atomic Overtime Settlement with SMS notification (after commit)
-- Proper error handling and validation
-- Pagination + N+1 Query Prevention using `@EntityGraph`
-
-## Tech Stack
-
-- **Java 17**
-- **Spring Boot 2.4.3**
-- **JPA / Hibernate**
-- **PostgreSQL (Supabase)**
-- **Redis** (for caching)
-- **Lombok**
+A robust backend system for managing blue-collar workforce operations in the construction industry.  
+This system handles worker attendance, real-time active workers tracking, overtime management, and monthly settlement processing.
 
 ---
 
-## Full Setup Guide
+# 🚀 Features Implemented
 
-### Step 1: Clone & Setup New Repository
+## ✅ Worker & Site Management
+- Create and manage workers
+- Create and manage construction sites
+- Worker active/inactive status management
+
+## ✅ Attendance Management
+- Clock-In / Clock-Out system
+- Prevents duplicate active attendance
+- Tracks working duration automatically
+
+## ✅ Real-Time Active Workers (Redis)
+- Fast retrieval of active workers
+- Redis cache with TTL support
+- Optimized for supervisor dashboards
+
+## ✅ Automatic Overtime Calculation
+- 1.5x wage for first 2 overtime hours
+- 2x wage after 2 overtime hours
+- Automatic overtime entry creation
+
+## ✅ Monthly Overtime Cap
+- Maximum 60 overtime hours per month
+- Prevents exceeding overtime limits
+
+## ✅ Settlement System
+- Atomic overtime settlement using `@Transactional`
+- SMS notification triggered only after successful DB commit
+- Supports monthly settlement flow
+
+## ✅ Performance Optimizations
+- Pagination support
+- N+1 Query Prevention using `@EntityGraph`
+- HikariCP connection pooling
+
+## ✅ Proper Error Handling
+- Global exception handling
+- Validation support
+- Business rule enforcement
+
+---
+
+# 🛠️ Tech Stack
+
+| Technology | Usage |
+|---|---|
+| Java 17 | Core Language |
+| Spring Boot 2.4.3 | Backend Framework |
+| Spring Data JPA | ORM |
+| Hibernate | Persistence Layer |
+| PostgreSQL (Supabase) | Database |
+| Redis | Caching |
+| Lombok | Boilerplate Reduction |
+| Maven | Build Tool |
+
+---
+
+# 📂 Project Architecture
+
+```text
+Controller Layer
+       ↓
+Service Layer
+       ↓
+Repository Layer
+       ↓
+PostgreSQL (Supabase)
+
+Redis Cache
+   ↓
+Active Workers API
+```
+
+---
+
+# ⚙️ Full Setup Guide
+
+# 📌 Step 1: Clone Repository
 
 ```bash
-# 1. Clone original repo (if not already done)
-git clone https://github.com/YOUR_USERNAME/spring-boot-fullstack-professional.git
-cd spring-boot-fullstack-professional
+git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git
 
-# 2. Remove original git history (to detach from amigoscode)
-rm -rf .git
+cd YOUR_REPOSITORY_NAME
+```
 
-# 3. Initialize new git repository
-git init
+---
 
-# 4. Add remote to your new repo
-git remote add origin https://github.com/YOUR_USERNAME/your-new-repo-name.git
+# 📌 Step 2: Install Redis
 
-# 5. Add all files
-git add .
+## MacOS
 
-# 6. First commit
-git commit -m "Initial commit: Construction HRMS Backend Assignment"
-
-# 7. Push to new repository
-git push -u origin main
-
-### Step 2: Install Dependencies
-
-# Install Redis (Mac)
+```bash
 brew install redis
+
 brew services start redis
+```
 
-# Verify Redis
-redis-cli ping   # Should return "PONG"
+## Verify Redis
 
-###Step 3: Setup Supabase Database
+```bash
+redis-cli ping
+```
 
-# 1. Go to supabase.com and create a new project
-# 2. Go to Project Settings → Database
-# 3. Copy the JDBC URL (use port 6543 - Pooler)
-# 4. Note down postgres username and password
+Expected Output:
 
-###Step 4: Configure application.yml
-Create / Update src/main/resources/application.yml:
+```text
+PONG
+```
+
+---
+
+# 📌 Step 3: Setup Supabase Database
+
+## 1️⃣ Create Supabase Project
+
+Go to:
+
+```text
+https://supabase.com
+```
+
+- Sign in
+- Click **New Project**
+- Enter:
+    - Project Name
+    - Database Password
+    - Region
+- Create project
+
+---
+
+## 2️⃣ Open Database Settings
+
+Inside Supabase Dashboard:
+
+```text
+Project Settings
+      ↓
+Database
+```
+
+---
+
+## 3️⃣ Copy Required Credentials
+
+Copy these values:
+
+| Field | Example |
+|---|---|
+| JDBC URL | jdbc:postgresql://db.xxxxx.supabase.co:6543/postgres |
+| Username | postgres |
+| Password | your-password |
+
+⚠️ IMPORTANT:
+Use **Pooler Port = 6543**
+
+NOT:
+
+```text
+5432
+```
+
+Use:
+
+```text
+6543
+```
+
+---
+
+# 📌 Step 4: Configure application.yml
+
+Create file:
+
+```text
+src/main/resources/application.yml
+```
+
+Add this configuration:
+
+```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://db.[YOUR-PROJECT-REF].supabase.co:6543/postgres
+    url: jdbc:postgresql://db.YOUR_PROJECT_REF.supabase.co:6543/postgres
     username: postgres
-    password: [YOUR_SUPABASE_PASSWORD]
+    password: YOUR_SUPABASE_PASSWORD
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -88,33 +206,238 @@ spring:
 
 server:
   port: 8080
+```
 
-###Step 5: Run the Application
+---
 
-# Clean and run
+# 📌 Step 5: Run Application
+
+```bash
 mvn clean spring-boot:run
-Application will start on http://localhost:8080
+```
 
+Application starts on:
 
-API Endpoints
-Worker
+```text
+http://localhost:8080
+```
 
-POST /api/workers → Create worker
-GET /api/workers → List workers
+---
 
-Site
+# 📡 API Endpoints
 
-POST /api/sites → Create site
-GET /api/sites → List sites
+# 👷 Worker APIs
 
-Attendance
+## Create Worker
 
-POST /api/attendance/clock-inJSON{ "workerId": 1, "siteId": 1 }
-POST /api/attendance/clock-outJSON{ "workerId": 1 }
-GET /api/attendance/active → Real-time active workers (Redis)
+```http
+POST /api/workers
+```
+
+## Get All Workers
+
+```http
+GET /api/workers
+```
+
+---
+
+# 🏗️ Site APIs
+
+## Create Site
+
+```http
+POST /api/sites
+```
+
+## Get All Sites
+
+```http
+GET /api/sites
+```
+
+---
+
+# 🕒 Attendance APIs
+
+## Clock-In Worker
+
+```http
+POST /api/attendance/clock-in
+```
+
+### Request Body
+
+```json
+{
+  "workerId": 1,
+  "siteId": 1
+}
+```
+
+---
+
+## Clock-Out Worker
+
+```http
+POST /api/attendance/clock-out
+```
+
+### Request Body
+
+```json
+{
+  "workerId": 1
+}
+```
+
+---
+
+## Get Active Workers (Redis)
+
+```http
+GET /api/attendance/active
+```
+
+---
+
+## Attendance Logs
+
+```http
 GET /api/attendance/log?workerId=1&from=2026-05-01&to=2026-05-25&page=0&size=10
+```
 
-Overtime
+---
 
+# ⏱️ Overtime APIs
+
+## Get Overtime Summary
+
+```http
 GET /api/overtime/summary/{workerId}?month=2026-05
+```
+
+---
+
+## Settle Overtime
+
+```http
 POST /api/overtime/settle/{workerId}?month=2026-04
+```
+
+---
+
+# 📌 Business Rules Implemented
+
+- Standard shift = 8 hours
+- First 2 overtime hours → 1.5x wage
+- After 2 overtime hours → 2x wage
+- Monthly overtime cap = 60 hours
+- Workers exceeding 16 hours are flagged
+- Only one active attendance allowed per worker
+
+---
+
+# ⚡ Redis Usage
+
+Redis is used only for:
+
+```text
+GET /api/attendance/active
+```
+
+## Cached Data
+- Active workers list
+- TTL = 16 hours
+
+## Why Redis?
+- Real-time response
+- Faster than DB query
+- Optimized for supervisor dashboards
+
+---
+
+# 🔒 Transaction Handling
+
+Settlement flow uses:
+
+```java
+@Transactional
+```
+
+## Why?
+Ensures:
+- All DB operations succeed together
+- No partial settlement
+
+## AFTER_COMMIT Event
+SMS notification is triggered only after successful transaction commit.
+
+---
+
+# 📈 Performance Improvements
+
+- Pagination support
+- `@EntityGraph` to prevent N+1 queries
+- Redis caching
+- HikariCP connection pooling
+
+---
+
+# 🧪 Example Flows
+
+# ✅ Clock-In Flow
+
+```text
+Clock-In Request
+      ↓
+Validation
+      ↓
+Save Attendance
+      ↓
+Add Worker to Redis
+      ↓
+Success Response
+```
+
+---
+
+# ✅ Clock-Out Flow
+
+```text
+Clock-Out Request
+      ↓
+Calculate Hours
+      ↓
+Check Overtime
+      ↓
+Create Overtime Entry
+      ↓
+Remove Worker from Redis
+```
+
+---
+
+# ✅ Settlement Flow
+
+```text
+POST /settle
+      ↓
+@Transactional
+      ↓
+Update Status = SETTLED
+      ↓
+AFTER_COMMIT Event
+      ↓
+Send SMS
+```
+
+---
+
+# 👨‍💻 Author
+
+## Nitesh Kumar
+
+Software Engineer | Java Backend Developer
+
+---
